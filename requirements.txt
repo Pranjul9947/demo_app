@@ -1,7 +1,8 @@
 numpy
 scikit-learn
 pandas
+joblib
 xgboost
 streamlit
 Pillow
-gdown
+requests
