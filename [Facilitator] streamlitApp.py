@@ -1,6 +1,8 @@
 import streamlit as st
 import pickle
 import numpy as np
+import gdown
+import os
 from PIL import Image
 
 # Set page config
@@ -13,19 +15,24 @@ st.caption(
     "Timelytics is an ensemble model that utilizes three powerful machine learning algorithms - XGBoost, Random Forests, and SVM - to accurately forecast Order to Delivery (OTD) times."
 )
 
-# Upload model file
-uploaded_file = st.file_uploader("Upload Model File (voting_model.pkl)", type=["pkl"])
+# Google Drive File ID (Extract from the shareable link)
+file_id = "1SPeDfOLYsCtrsBCWgGG7RyCNnb8zUtQD"
 
-# Load the model after uploading
-if uploaded_file is not None:
-    try:
-        voting_model = pickle.load(uploaded_file)
-        st.success("✅ Model loaded successfully!")
-    except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
-        voting_model = None
-else:
-    st.warning("⚠ Please upload a model file to proceed.")
+# Define the model filename
+model_path = "voting_model.pkl"
+
+# Download model from Google Drive if not already downloaded
+if not os.path.exists(model_path):
+    with st.spinner("Downloading model from Google Drive..."):
+        gdown.download(f"https://drive.google.com/uc?id={file_id}", model_path, quiet=False)
+
+# Load the model
+try:
+    with open(model_path, "rb") as f:
+        voting_model = pickle.load(f)
+    st.success("✅ Model loaded successfully!")
+except Exception as e:
+    st.error(f"❌ Error loading model: {e}")
     voting_model = None
 
 # Define the prediction function
@@ -40,7 +47,7 @@ def waitime_predictor(
     distance,
 ):
     if voting_model is None:
-        st.error("❌ Model not loaded. Please upload a valid model file.")
+        st.error("❌ Model not loaded. Please check the model file.")
         return None
     prediction = voting_model.predict(
         np.array(
@@ -91,4 +98,4 @@ if submit:
                 st.header("Output: Wait Time in Days")
                 st.write(f"🕒 Estimated Delivery Time: **{prediction} days**")
     else:
-        st.error("❌ Please upload a model file first.")
+        st.error("❌ Model not available. Please check the Google Drive link.")
