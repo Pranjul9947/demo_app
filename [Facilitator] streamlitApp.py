@@ -67,7 +67,7 @@ def waitime_predictor(
 
 # Sidebar inputs
 with st.sidebar:
-    img = Image.open("./assets/supply_chain_optimisation.jpg")
+    img = Image.open("supply_chain_optimisation.jpg")
     st.image(img)
     st.header("Input Parameters")
     purchase_dow = st.number_input("Purchased Day of the Week", min_value=0, max_value=6, step=1, value=3)
