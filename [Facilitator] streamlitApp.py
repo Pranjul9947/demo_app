@@ -53,7 +53,7 @@ def waitime_predictor(
 
 # Sidebar for input parameters and sample dataset
 with st.sidebar:
-    img = Image.open("./assets/supply_chain_optimisation.jpg")
+    img = Image.open("supply_chain_optimisation.jpg")
     st.image(img)
     st.header("Input Parameters")
 
